@@ -1,13 +1,24 @@
 if [[ $EUID != 0 ]]; then echo -e "\nNaive! I think this young man will not be able to run this script without root privileges.\n" ; exit 1 ; fi
 
-read -p "Centos or Ubuntu(Default)? [c/u]" release
-case $release in
-        [cC] ) os=centos;;
-        * ) os=ubuntu;;
-esac
+if [[ -f /etc/redhat-release ]]; then
+        release="centos"
+elif cat /etc/issue | grep -q -E -i "debian"; then
+        release="debian"
+elif cat /etc/issue | grep -q -E -i "ubuntu"; then
+        release="ubuntu"
+elif cat /etc/issue | grep -q -E -i "centos|red hat|redhat"; then
+        release="centos"
+elif cat /proc/version | grep -q -E -i "debian"; then
+        release="debian"
+elif cat /proc/version | grep -q -E -i "ubuntu"; then
+        release="ubuntu"
+elif cat /proc/version | grep -q -E -i "centos|red hat|redhat"; then
+        release="centos"
+fi
 
 
-if [[ $os == ubuntu ]]; then
+
+if [[ $release == ubuntu ]]; then
         apt-get wget install make gcc libc6-dev wget libsqlite3-0 libsqlite3-dev ntpdate -y
 else
     	yum install wget sqlite-devel nano gcc ntpdate gd-devel -y
