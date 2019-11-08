@@ -1,3 +1,15 @@
+#!/usr/bin/env bash
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
+export PATH
+
+#=================================================
+#	System Required: CentOS/Debian/Ubuntu
+#	Description: vnStat Install
+#	Version: 1.0.0
+#	Author: ame
+#=================================================
+
+
 if [[ $EUID != 0 ]]; then echo -e "\nNaive! I think this young man will not be able to run this script without root privileges.\n" ; exit 1 ; fi
 
 if [[ -f /etc/redhat-release ]]; then
