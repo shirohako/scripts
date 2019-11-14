@@ -32,7 +32,7 @@ if [[ $release == centos ]]; then
     yum install wget sqlite-devel nano gcc ntpdate gd-devel -y
     yum install kernel-headers -y
 else
-    apt-get wget install make gcc libc6-dev wget libsqlite3-0 libsqlite3-dev ntpdate -y
+    apt-get install wget make gcc libc6-dev wget libsqlite3-0 libsqlite3-dev ntpdate -y
 fi
     	
 
