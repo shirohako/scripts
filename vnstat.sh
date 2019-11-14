@@ -34,12 +34,11 @@ if [[ $release == centos ]]; then
 else
     apt-get wget install make gcc libc6-dev wget libsqlite3-0 libsqlite3-dev ntpdate -y
 fi
-    	
 
 cp /usr/share/zoneinfo/Asia/Shanghai  /etc/localtime
 ntpdate asia.pool.ntp.org
 
-wget https://humdi.net/vnstat/vnstat-latest.tar.gz
+wget -N https://humdi.net/vnstat/vnstat-latest.tar.gz
 tar zxvf vnstat-latest.tar.gz
 rm vnstat-latest.tar.gz -f
 cd vnstat-2*
