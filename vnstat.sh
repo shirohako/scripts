@@ -35,17 +35,24 @@ else
     apt-get install wget make gcc libc6-dev wget libsqlite3-0 libsqlite3-dev ntpdate -y
 fi
 
-cp /usr/share/zoneinfo/Asia/Shanghai  /etc/localtime
-ntpdate asia.pool.ntp.org
-
 wget -N https://humdi.net/vnstat/vnstat-latest.tar.gz
 tar zxvf vnstat-latest.tar.gz
 rm vnstat-latest.tar.gz -f
 cd vnstat-2*
 ./configure --prefix=/usr --sysconfdir=/etc && make && make install
 
-wget https://raw.githubusercontent.com/vergoh/vnstat/master/examples/systemd/simple/vnstat.service
+if [[ ! -f /usr/bin/vnstat ]]; then
+   echo "安装失败!"
+   exit 1
+fi
 
+cp /usr/share/zoneinfo/Asia/Shanghai  /etc/localtime
+ntpdate asia.pool.ntp.org
+
+wget https://raw.githubusercontent.com/vergoh/vnstat/master/examples/systemd/simple/vnstat.service
 chmod 754 vnstat.service && mv vnstat.service /etc/systemd/system -f
 systemctl enable vnstat && systemctl start vnstat
 systemctl daemon-reload
+
+cd .. && rm -rf vnstat-2*
+echo "安装成功!"
