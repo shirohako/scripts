@@ -28,14 +28,13 @@ elif cat /proc/version | grep -q -E -i "centos|red hat|redhat"; then
         release="centos"
 fi
 
-
-
-if [[ $release == ubuntu ]]; then
-        apt-get wget install make gcc libc6-dev wget libsqlite3-0 libsqlite3-dev ntpdate -y
+if [[ $release == centos ]]; then
+    yum install wget sqlite-devel nano gcc ntpdate gd-devel -y
+    yum install kernel-headers -y
 else
-    	yum install wget sqlite-devel nano gcc ntpdate gd-devel -y
-    	yum install kernel-headers -y
+    apt-get wget install make gcc libc6-dev wget libsqlite3-0 libsqlite3-dev ntpdate -y
 fi
+    	
 
 cp /usr/share/zoneinfo/Asia/Shanghai  /etc/localtime
 ntpdate asia.pool.ntp.org
