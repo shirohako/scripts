@@ -9,6 +9,7 @@ export PATH
 #	Author: ame
 #=================================================
 
+GreenPrefix="\033[42m" && RedPrefix="\033[41m" && BluePrefix="\033[44m" && Suffix="\033[0m"
 
 if [[ -f /etc/redhat-release ]]; then
         release="centos"
@@ -27,24 +28,25 @@ elif cat /proc/version | grep -q -E -i "centos|red hat|redhat"; then
 fi
 
 if [[ $release == centos ]]; then
-	yum update
+    yum update
     yum -y groupinstall "Development Tools"
 else
-	apt-get update
+    apt-get update
     apt-get install -y build-essential
 fi
 
-GreenPrefix="\033[42m" && RedPrefix="\033[41m" && BluePrefix="\033[44m" && Suffix="\033[0m"
-
 LATEST_RELEASE=$(wget -qO- "https://github.com/jedisct1/libsodium/tags"|grep "/jedisct1/libsodium/releases/tag/"|head -1|sed -r 's/.*tag\/(.+)\">.*/\1/') 
+echo -e "${BluePrefix} Downloading libsodium ${LATEST_RELEASE} ${Suffix}"
+wget --no-check-certificate -N "https://github.com/jedisct1/libsodium/releases/latest/download/libsodium-${LATEST_RELEASE}.tar.gz"
+tar -xzf libsodium-${LATEST_RELEASE}.tar.gz && cd libsodium-${LATEST_RELEASE}
 
-echo -e "${BluePrefix}Downloading libsodium ${LATEST_RELEASE} ${Suffix}"
-
-wget --no-check-certificate "https://github.com/jedisct1/libsodium/archive/${LATEST_RELEASE}.tar.gz"
-
-tar -xzf ${LATEST_RELEASE}.tar.gz && cd libsodium-${LATEST_RELEASE}
+echo -e "${BluePrefix} Compiling ${Suffix}"
 ./configure --disable-maintainer-mode && make -j2 && make install
 ldconfig
-cd .. && rm -rf ${LATEST_RELEASE}.tar.gz && rm -rf libsodium-${LATEST_RELEASE}
 
-echo -e "${GreenPrefix}Installation successful!${Suffix}"
+if [[ -e "/usr/local/lib/libsodium.so" ]]; then
+	echo -e "${GreenPrefix}Installation successful!${Suffix}"
+	cd .. && rm -f libsodium-${LATEST_RELEASE}.tar.gz && rm -rf libsodium-${LATEST_RELEASE}
+else
+	echo -e "${RedPrefix}Installation has failed!${Suffix}"
+fi
