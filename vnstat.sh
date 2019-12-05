@@ -9,6 +9,8 @@ export PATH
 #	Author: ame
 #=================================================
 
+GreenPrefix="\033[42m" && RedPrefix="\033[41m" && BluePrefix="\033[44m" && Suffix="\033[0m"
+
 
 if [[ $EUID != 0 ]]; then echo -e "\nNaive! I think this young man will not be able to run this script without root privileges.\n" ; exit 1 ; fi
 
@@ -35,17 +37,25 @@ else
     apt-get install wget make gcc libc6-dev wget libsqlite3-0 libsqlite3-dev ntpdate -y
 fi
 
-cp /usr/share/zoneinfo/Asia/Shanghai  /etc/localtime
-ntpdate asia.pool.ntp.org
-
-wget -N https://humdi.net/vnstat/vnstat-latest.tar.gz
+wget -N --no-check-certificate https://humdi.net/vnstat/vnstat-latest.tar.gz
 tar zxvf vnstat-latest.tar.gz
 rm vnstat-latest.tar.gz -f
 cd vnstat-2*
 ./configure --prefix=/usr --sysconfdir=/etc && make && make install
 
-wget https://raw.githubusercontent.com/vergoh/vnstat/master/examples/systemd/simple/vnstat.service
+if [[ ! -f /usr/bin/vnstat ]]; then
+   echo -e "${RedPrefix}Installation has failed!${Suffix}"
+   exit 1
+fi
 
+cp /usr/share/zoneinfo/Asia/Shanghai  /etc/localtime
+ntpdate asia.pool.ntp.org
+
+wget -N --no-check-certificate https://raw.githubusercontent.com/vergoh/vnstat/master/examples/systemd/simple/vnstat.service
 chmod 754 vnstat.service && mv vnstat.service /etc/systemd/system -f
 systemctl enable vnstat && systemctl start vnstat
 systemctl daemon-reload
+
+cd .. && rm -rf vnstat-2*
+
+echo -e "${GreenPrefix}Installation successful!${Suffix}"
