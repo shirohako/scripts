@@ -9,3 +9,13 @@
 ```bash
 bash <(wget --no-check-certificate -qO- https://raw.githubusercontent.com/shirohako/scripts/master/vnstat.sh)
 ```
+
+## libsodium one-click installer
+
+[libsodium](https://github.com/jedisct1/libsodium) - A modern, portable, easy to use crypto library.
+
+##### Usage
+
+```bash
+bash <(wget --no-check-certificate -qO- https://raw.githubusercontent.com/shirohako/scripts/master/libsodium.sh)
+```
