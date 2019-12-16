@@ -5,12 +5,31 @@ export PATH
 #=================================================
 #	System Required: CentOS/Debian/Ubuntu
 #	Description: vnStat Install
-#	Version: 1.0.0
+#	Version: 1.0.1
 #	Author: ame
 #=================================================
 
-GreenPrefix="\033[42m" && RedPrefix="\033[41m" && BluePrefix="\033[44m" && Suffix="\033[0m"
+_norm=$(tput sgr0)
+_red=$(tput setaf 1)
+_green=$(tput setaf 2)
+_tan=$(tput setaf 3)
+_cyan=$(tput setaf 6)
 
+function _print() {
+    printf "${_norm}%s${_norm}\n" "$@"
+}
+function _info() {
+    printf "${_cyan}➜ %s${_norm}\n" "$@"
+}
+function _success() {
+    printf "${_green}✓ %s${_norm}\n" "$@"
+}
+function _warning() {
+    printf "${_tan}⚠ %s${_norm}\n" "$@"
+}
+function _error() {
+    printf "${_red}✗ %s${_norm}\n" "$@"
+}
 
 if [[ $EUID != 0 ]]; then echo -e "\nNaive! I think this young man will not be able to run this script without root privileges.\n" ; exit 1 ; fi
 
@@ -31,12 +50,15 @@ elif cat /proc/version | grep -q -E -i "centos|red hat|redhat"; then
 fi
 
 if [[ $release == centos ]]; then
-    yum install wget sqlite-devel nano gcc ntpdate gd-devel -y
+    _info "yum installing dependent packages..."
+    yum install wget sqlite-devel gcc ntpdate gd-devel -y
     yum install kernel-headers -y
 else
-    apt-get install wget make gcc libc6-dev libgd-dev libsqlite3-0 libsqlite3-dev ntpdate -y
+    _info "apt-get installing dependent packages..."
+    apt-get install wget make gcc libc6-dev libgd-dev libsqlite3-dev ntpdate -y
 fi
 
+_info "download source files..."
 wget -N --no-check-certificate https://humdi.net/vnstat/vnstat-latest.tar.gz
 tar zxvf vnstat-latest.tar.gz
 rm vnstat-latest.tar.gz -f
@@ -44,13 +66,14 @@ cd vnstat-2*
 ./configure --prefix=/usr --sysconfdir=/etc && make && make install
 
 if [[ ! -f /usr/bin/vnstat ]]; then
-   echo -e "${RedPrefix}Installation has failed!${Suffix}"
+   _error "installation has failed!"
    exit 1
 fi
 
 cp /usr/share/zoneinfo/Asia/Shanghai  /etc/localtime
 ntpdate asia.pool.ntp.org
 
+_info "creating vnStat Service"
 wget -N --no-check-certificate https://raw.githubusercontent.com/vergoh/vnstat/master/examples/systemd/simple/vnstat.service
 chmod 754 vnstat.service && mv vnstat.service /etc/systemd/system -f
 systemctl enable vnstat && systemctl start vnstat
@@ -58,4 +81,4 @@ systemctl daemon-reload
 
 cd .. && rm -rf vnstat-2*
 
-echo -e "${GreenPrefix}Installation successful!${Suffix}"
+_success "vnStat installation finished"
