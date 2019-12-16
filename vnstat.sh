@@ -58,7 +58,7 @@ else
     apt-get install wget make gcc libc6-dev libgd-dev libsqlite3-dev ntpdate -y
 fi
 
-_info "download source files..."
+_info "downloading source files..."
 wget -N --no-check-certificate https://humdi.net/vnstat/vnstat-latest.tar.gz
 tar zxvf vnstat-latest.tar.gz
 rm vnstat-latest.tar.gz -f
@@ -70,6 +70,7 @@ if [[ ! -f /usr/bin/vnstat ]]; then
    exit 1
 fi
 
+_info "setting timezone and enable network time sync"
 cp /usr/share/zoneinfo/Asia/Shanghai  /etc/localtime
 ntpdate asia.pool.ntp.org
 
