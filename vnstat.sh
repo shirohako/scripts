@@ -51,7 +51,7 @@ fi
 
 if [[ $release == centos ]]; then
     _info "yum installing dependent packages..."
-    yum install wget sqlite-devel gcc ntpdate gd-devel -y
+    yum install wget sqlite-devel gcc ntpdate gd-devel make -y
     yum install kernel-headers -y
 else
     _info "apt-get installing dependent packages..."
