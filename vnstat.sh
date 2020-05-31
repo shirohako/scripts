@@ -78,9 +78,9 @@ ntpdate asia.pool.ntp.org
 
 _info "creating vnStat Service"
 wget -N --no-check-certificate https://raw.githubusercontent.com/vergoh/vnstat/master/examples/systemd/simple/vnstat.service
+sed -i "s/sbin\//bin\/nohup /g" vnstat.service
 chmod 754 vnstat.service && mv vnstat.service /etc/systemd/system -f
 systemctl enable vnstat && systemctl start vnstat
-systemctl daemon-reload
 
 cd .. && rm -rf vnstat-2*
 
