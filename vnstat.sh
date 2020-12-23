@@ -76,7 +76,7 @@ cp /usr/share/zoneinfo/Asia/Shanghai  /etc/localtime
 ntpdate asia.pool.ntp.org
 
 _info "creating vnStat Service"
-wget -N --no-check-certificate https://raw.githubusercontent.com/vergoh/vnstat/master/examples/systemd/simple/vnstat.service
+wget -N --no-check-certificate https://cdn.jsdelivr.net/gh/ghvergoh/vnstat/examples/systemd/simple/vnstat.service
 sed -i "s/sbin\//bin\/nohup /g" vnstat.service
 chmod 754 vnstat.service && mv vnstat.service /etc/systemd/system -f
 systemctl enable vnstat && systemctl start vnstat
