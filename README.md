@@ -7,7 +7,7 @@
 ##### Usage
 
 ```bash
-bash <(wget --no-check-certificate -qO- https://raw.githubusercontent.com/shirohako/scripts/master/vnstat.sh)
+bash <(wget --no-check-certificate -qO- https://cdn.jsdelivr.net/gh/shirohako/scripts@latest/vnstat.sh)
 ```
 
 ## libsodium one-click installer
